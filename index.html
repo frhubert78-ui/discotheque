@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B0D12">
+<title>Notre Discothèque</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#0B0D12;--card:#1A1E28;--line:#232836;--txt:#EDEFF5;--mut:#A3A9B8;--acc:#E46A8C;--accd:#0B0D12}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:'Space Grotesk',system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--acc)}
+.app{max-width:520px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:110px}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:22px 20px 6px;gap:12px}
+header.top h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.5px}
+.ibtn{width:44px;height:44px;border-radius:22px;border:none;background:var(--card);display:flex;align-items:center;justify-content:center;flex:none}
+.ibtn svg{width:20px;height:20px}
+.hero{position:relative;height:280px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero .side{position:absolute;top:70px;width:140px;height:140px;border-radius:6px;opacity:.4;background-size:cover;background-position:center;border:none;padding:0}
+.hero .side.l{left:-50px}.hero .side.r{right:-50px}
+.sleeve{position:relative;width:200px;height:200px;display:block;border:none;background:none;padding:0}
+.sleeve .disc{position:absolute;top:6px;left:56px;width:188px;height:188px;border-radius:50%;background:repeating-radial-gradient(circle,#050608 0 2px,#171A22 2px 4px);display:flex;align-items:center;justify-content:center;transition:left .4s}
+.sleeve:hover .disc{left:72px}
+.sleeve .disc i{width:60px;height:60px;border-radius:50%;background:var(--acc);background-size:cover;background-position:center;border:3px solid var(--bg)}
+.cover{position:absolute;inset:0;border-radius:6px;background:#20252F center/cover;box-shadow:0 0 40px rgba(228,106,140,.33),0 14px 30px rgba(0,0,0,.6);overflow:hidden}
+.ph{display:flex;align-items:flex-end;padding:10px;font-weight:700;color:#fff;font-size:13px;line-height:1.1}
+.herot{text-align:center;display:flex;flex-direction:column;gap:2px;padding:0 20px}
+.herot b{font-size:20px}.herot span{font-size:14px;color:var(--mut)}
+.sec{padding:18px 20px 0}
+.lbl{font-size:12px;font-weight:500;letter-spacing:2px;color:var(--mut);text-transform:uppercase}
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:24px;padding:0 16px;height:48px;margin-top:10px}
+.search input{flex:1;background:none;border:none;outline:none;font-size:15px;height:100%}
+.chips{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+.chip{height:40px;padding:0 16px;border-radius:20px;border:1px solid #343A48;background:none;color:var(--txt);font-size:14px;white-space:nowrap}
+.chip.on{background:var(--acc);border-color:var(--acc);color:var(--accd);font-weight:700}
+.row{min-height:64px;display:flex;align-items:center;gap:14px;border:none;border-bottom:1px solid var(--line);background:none;width:100%;text-align:left;padding:8px 0;color:var(--txt);text-decoration:none}
+.thumb{width:48px;height:48px;border-radius:4px;flex:none;background:#20252F center/cover}
+.row .t{flex:1;display:flex;flex-direction:column;min-width:0}
+.row .t b{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t span{font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{font-size:11px;padding:3px 8px;border-radius:10px;border:1px solid #343A48;color:var(--mut);flex:none}
+.heart{color:var(--acc);font-size:14px}
+nav.bar{position:fixed;left:50%;transform:translateX(-50%);bottom:max(16px,env(safe-area-inset-bottom));width:min(488px,calc(100% - 32px));height:64px;border-radius:32px;background:var(--card);display:flex;align-items:center;justify-content:space-around;z-index:10;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+nav.bar button{width:52px;height:52px;border:none;background:none;color:var(--mut);display:flex;align-items:center;justify-content:center;border-radius:26px}
+nav.bar button.on{color:var(--acc)}
+nav.bar button.add{background:var(--acc);color:var(--accd)}
+nav.bar svg{width:24px;height:24px}
+/* fiche album */
+.dtop{position:relative;height:330px;overflow:hidden}
+.bigdisc{position:absolute;left:50%;margin-left:-170px;top:-40px;width:340px;height:340px;border-radius:50%;background:repeating-radial-gradient(circle,#050608 0 2px,#171A22 2px 4px);box-shadow:0 0 60px rgba(228,106,140,.27);display:flex;align-items:center;justify-content:center;animation:spin 8s linear infinite}
+.bigdisc.paused{animation-play-state:paused}
+.bigdisc .lab{width:130px;height:130px;border-radius:50%;background:var(--acc) center/cover;display:flex;align-items:center;justify-content:center;border:4px solid #0B0D12;position:relative}
+.bigdisc .lab:after{content:"";width:12px;height:12px;border-radius:50%;background:var(--bg);box-shadow:0 0 0 2px rgba(255,255,255,.4)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dtop .back{position:absolute;left:16px;top:16px;background:rgba(26,30,40,.85)}
+.dtop .edit{position:absolute;right:16px;top:16px;background:rgba(26,30,40,.85)}
+.dinfo{padding:4px 20px 0;display:flex;flex-direction:column;gap:14px}
+.dinfo h2{margin:0;font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
+.dinfo .sub{margin:2px 0 0;font-size:14px;color:var(--mut)}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{padding:6px 12px;border-radius:14px;background:var(--card);font-size:12px}
+.stars{display:flex;gap:4px}
+.stars button{width:36px;height:36px;border:none;background:none;font-size:22px;color:#343A48;padding:0}
+.stars button.on{color:var(--acc)}
+.big{height:52px;border-radius:26px;background:var(--acc);color:var(--accd);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;border:none;width:100%}
+.ghost{height:48px;border-radius:24px;background:none;border:1px solid #343A48;color:var(--txt);font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.trk{min-height:50px;display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--txt);border-bottom:1px solid var(--line)}
+.trk .n{width:22px;font-size:13px;color:var(--mut)}
+.trk .nm{flex:1;font-size:15px}
+.trk svg{flex:none}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mut)}
+.field input,.field select,.field textarea{background:var(--card);border:1px solid #2A3040;border-radius:12px;padding:12px 14px;font-size:15px;color:var(--txt);outline:none;width:100%}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--acc)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.form{padding:8px 20px 20px;display:flex;flex-direction:column;gap:14px}
+.res{display:flex;gap:12px;align-items:center;padding:8px;border-radius:12px;background:var(--card);border:1px solid transparent;width:100%;text-align:left;color:var(--txt)}
+.res img{width:56px;height:56px;border-radius:4px;object-fit:cover;flex:none}
+.res.sel{border-color:var(--acc)}
+.muted{color:var(--mut);font-size:13px;line-height:1.4}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;background:var(--txt);color:var(--bg);padding:10px 18px;border-radius:20px;font-size:14px;z-index:20;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.on{opacity:1}
+.empty{padding:40px 20px;text-align:center;color:var(--mut)}
+.danger{color:#FF8A8A;border-color:#5A2A33}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<nav class="bar" aria-label="Navigation">
+  <button id="nav-albums" aria-label="Albums" onclick="go('#/')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg></button>
+  <button id="nav-titres" aria-label="Tous les titres" onclick="go('#/titres')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></button>
+  <button id="nav-ajout" class="add" aria-label="Ajouter un album" onclick="go('#/ajout')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button id="nav-favoris" aria-label="Favoris" onclick="go('#/favoris')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></button>
+  <button id="nav-reglages" aria-label="Réglages" onclick="go('#/reglages')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- Données de départ ----------
+const SEED = [
+ {"artist": "Stray Kids", "title": "KARMA", "year": 2025, "type": "Album (4e)", "format": "CD", "version": "", "tracks": ["BLEEP (삐처리)", "CEREMONY", "CREED", "MESS (엉망)", "In My Head", "Half Time (반전)", "Phoenix", "Ghost", "0801", "CEREMONY (Festival Version)", "CEREMONY (English Version)"]},
+ {"artist": "Stray Kids", "title": "ATE", "year": 2024, "type": "Mini-album (9e)", "format": "CD", "version": "", "tracks": ["MOUNTAINS", "Chk Chk Boom", "JJAM", "I Like It", "Runners", "twilight", "Stray Kids", "Chk Chk Boom (Festival Ver.)"]},
+ {"artist": "BABYMONSTER", "title": "DRIP", "year": 2024, "type": "Album (1er)", "format": "CD", "version": "", "tracks": ["CLIK CLAK", "DRIP", "Love, Maybe", "Really Like You", "BILLIONAIRE", "Love In My Heart", "Woke Up In Tokyo (RUKA & ASA)", "FOREVER", "BATTER UP (Remix)"]},
+ {"artist": "ITZY", "title": "GOLD", "year": 2024, "type": "Mini-album (9e)", "format": "CD", "version": "", "tracks": ["GOLD", "Imaginary Friend", "Bad Girls R Us", "Supernatural", "FIVE", "VAY (feat. Changbin of Stray Kids)", "BORN TO BE", "UNTOUCHABLE", "Vampire", "Dynamite", "Escalator"]},
+ {"artist": "ENHYPEN", "title": "DESIRE : UNLEASH", "year": 2025, "type": "Mini-album (6e)", "format": "CD", "version": "", "tracks": ["Flashover", "Bad Desire (With or Without You)", "Outside", "Loose (Korean ver.)", "Helium", "Too Close", "Bad Desire (With or Without You) (English ver.)", "Loose"]},
+ {"artist": "ENHYPEN", "title": "BORDER : DAY ONE", "year": 2020, "type": "Mini-album (1er)", "format": "CD", "version": "", "tracks": ["Intro : Walk the Line", "Given-Taken", "Let Me In (20 CUBE)", "10 Months", "Flicker", "Outro : Crossing"]},
+ {"artist": "TUIDE", "title": "TUNE & PLAY", "year": 2026, "type": "EP (1er)", "format": "CD", "version": "", "tracks": ["ABD", "SUN KISS", "Echo", "Flip-Flop Girl", "GRLS"]},
+ {"artist": "KATSEYE", "title": "BEAUTIFUL CHAOS", "year": 2025, "type": "EP (2e)", "format": "CD", "version": "Chaotic ver.", "tracks": ["Gnarly", "Gabriela", "Gameboy", "Mean Girls", "M.I.A"]},
+ {"artist": "ILLIT", "title": "bomb", "year": 2025, "type": "Mini-album (3e)", "format": "CD", "version": "", "tracks": ["little monster", "Billyeoon Goyangi (Do the Dance)", "jellyous", "oops!", "bamsopoong"]},
+ {"artist": "LE SSERAFIM", "title": "SPAGHETTI", "year": 2025, "type": "Single album (1er)", "format": "CD", "version": "Weird Garlic", "tracks": ["SPAGHETTI (feat. j-hope of BTS)", "Pearlies (My oyster is the world)", "SPAGHETTI (Member ver.)", "SPAGHETTI (feat. j-hope of BTS) (English ver.)"]},
+ {"artist": "CORTIS", "title": "GREENGREEN", "year": 2026, "type": "EP (2e)", "format": "CD", "version": "", "tracks": ["TNT", "REDRED", "ACAI", "YOUNGCREATORCREW", "Wassup", "Blue Lips"]},
+ {"artist": "NewJeans", "title": "New Jeans", "year": 2022, "type": "EP (1er)", "format": "CD", "version": "Bluebook (Haerin)", "tracks": ["Attention", "Hype Boy", "Cookie", "Hurt"]},
+ {"artist": "NewJeans", "title": "Get Up", "year": 2023, "type": "EP (2e)", "format": "CD", "version": "The Powerpuff Girls", "tracks": ["New Jeans", "Super Shy", "ETA", "Cool With You", "Get Up", "ASAP"]},
+ {"artist": "aespa", "title": "Dirty Work", "year": 2025, "type": "Single album (1er)", "format": "CD", "version": "", "tracks": ["Dirty Work", "Dirty Work (feat. Flo Milli)", "Dirty Work (English Version)", "Dirty Work (Instrumental)"]},
+ {"artist": "(G)I-DLE", "title": "2", "year": 2024, "type": "Album (2e)", "format": "CD", "version": "", "tracks": ["Super Lady", "Revenge", "Doll", "Vision", "7Days", "나는 아픈 건 딱 질색이니까 (Fate)", "Rollie", "Wife"]},
+ {"artist": "TWICE", "title": "STRATEGY", "year": 2024, "type": "Mini-album (14e)", "format": "CD", "version": "", "tracks": ["Strategy (feat. Megan Thee Stallion)", "Kiss My Troubles Away", "Like It Like It", "Sweetest Obsession", "Keeper", "Magical", "Strategy"]},
+ {"artist": "TWICE", "title": "THIS IS FOR", "year": 2025, "type": "Album (4e)", "format": "CD", "version": "", "tracks": ["FOUR", "THIS IS FOR", "OPTIONS", "MARS", "RIGHT HAND GIRL", "PEACH GELATO", "HI HELLO", "BATTITUDE", "DAT AHH DAT OOH", "LET LOVE GO", "G.O.A.T.", "TALK", "SEESAW", "HEARTBREAK AVENUE"]},
+ {"artist": "JENNIE", "title": "Ruby", "year": 2025, "type": "Album (1er)", "format": "CD", "version": "", "tracks": ["Intro : JANE (with FKJ)", "like JENNIE", "start a war", "Handlebars (feat. Dua Lipa)", "with the IE (way up)", "ExtraL (feat. Doechii)", "Mantra", "Love Hangover (feat. Dominic Fike)", "ZEN", "Damn Right (feat. Childish Gambino & Kali Uchis)", "F.T.S.", "Filter", "Seoul City", "Starlight", "twin"]},
+ {"artist": "JISOO", "title": "AMORTAGE", "year": 2025, "type": "Mini-album (1er)", "format": "CD", "version": "", "tracks": ["earthquake", "Your Love", "TEARS", "Hugs & Kisses"]},
+ {"artist": "BLACKPINK", "title": "THE ALBUM", "year": 2020, "type": "Album (1er)", "format": "CD", "version": "", "tracks": ["How You Like That", "Ice Cream (with Selena Gomez)", "Pretty Savage", "Bet You Wanna (feat. Cardi B)", "Lovesick Girls", "Crazy Over You", "Love To Hate Me", "You Never Know"]},
+ {"artist": "BLACKPINK", "title": "BORN PINK", "year": 2022, "type": "Album (2e)", "format": "CD", "version": "", "tracks": ["Pink Venom", "Shut Down", "Typa Girl", "Yeah Yeah Yeah", "Hard to Love", "The Happiest Girl", "Tally", "Ready For Love"]},
+ {"artist": "BLACKPINK", "title": "DEADLINE", "year": 2026, "type": "Mini-album (3e)", "format": "CD", "version": "", "tracks": ["JUMP", "GO", "Me and my", "Champion", "Fxxxboy"]},
+ {"artist": "ROSÉ", "title": "rosie", "year": 2024, "type": "Album (1er)", "format": "CD", "version": "", "tracks": ["number one girl", "3am", "two years", "toxic till the end", "drinks or coffee", "APT. (with Bruno Mars)", "gameboy", "stay a little longer", "not the same", "call it the end", "too bad for us", "dance all night"]}
+];
+const COLORS=["#2E5E8C","#8C2F4F","#3C7A55","#6B4A7A","#B5651D","#2F6F78","#7A3B2E","#45507A"];
+const KEY="discotheque_v2";
+
+// ---------- Stockage ----------
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.albums))return d}catch(e){}
+  const now=Date.now();
+  return {albums:SEED.map((a,i)=>({id:uid()+i,...a,cover:"",color:COLORS[i%COLORS.length],fav:false,rating:0,listened:"",notes:"",amazon:"",trackLinks:{},added:now-i*1000}))};
+}
+let DB=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast("Mémoire pleine : photo trop lourde ?")}}
+const byId=id=>DB.albums.find(a=>a.id===id);
+
+// ---------- Utilitaires ----------
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=s=>document.querySelector(s);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2200)}
+function go(h){location.hash=h}
+const amzSearch=q=>"https://music.amazon.fr/search/"+encodeURIComponent(q);
+const albumLink=a=>a.amazon||amzSearch(a.artist+" "+a.title);
+const trackLink=(a,i)=>(a.trackLinks&&a.trackLinks[i])||amzSearch(a.artist+" "+cleanTrack(a.tracks[i]));
+function cleanTrack(t){return t.replace(/\s*\((Korean|English|Member|Festival)[^)]*\)/gi,"")}
+function coverStyle(a){return a.cover?`background-image:url('${a.cover.replace(/'/g,"%27")}')`:`background-color:${a.color}`}
+function coverInner(a){return a.cover?"":`<div class="ph" style="position:absolute;inset:0">${esc(a.title)}</div>`}
+
+// ---------- Recherche iTunes (pochettes + titres) ----------
+let jsonpN=0;
+function jsonp(url){return new Promise((res,rej)=>{const cb="__cb"+(++jsonpN);const s=document.createElement("script");const tm=setTimeout(()=>{clean();rej(new Error("timeout"))},9000);function clean(){clearTimeout(tm);delete window[cb];s.remove()}window[cb]=d=>{clean();res(d)};s.onerror=()=>{clean();rej(new Error("net"))};s.src=url+(url.includes("?")?"&":"?")+"callback="+cb;document.body.appendChild(s)})}
+async function itunesSearch(q){const d=await jsonp("https://itunes.apple.com/search?entity=album&limit=10&country=fr&term="+encodeURIComponent(q));return (d.results||[]).map(r=>({id:r.collectionId,artist:r.artistName,title:r.collectionName.replace(/ - (EP|Single)$/,""),year:(r.releaseDate||"").slice(0,4),cover:(r.artworkUrl100||"").replace("100x100bb","600x600bb"),count:r.trackCount}))}
+async function itunesTracks(id){const d=await jsonp("https://itunes.apple.com/lookup?entity=song&country=fr&id="+id);return (d.results||[]).filter(r=>r.wrapperType==="track").sort((a,b)=>(a.discNumber-b.discNumber)||(a.trackNumber-b.trackNumber)).map(r=>r.trackName)}
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9가-힣]/g,"");
+async function fillMissingCovers(){
+  const todo=DB.albums.filter(a=>!a.cover&&!a.noAuto);
+  for(const a of todo){
+    try{const r=await itunesSearch(a.artist+" "+a.title);
+      const m=r.find(x=>norm(x.artist).includes(norm(a.artist))&&norm(x.title).startsWith(norm(a.title)))||r.find(x=>norm(x.artist).includes(norm(a.artist)));
+      if(m&&m.cover){a.cover=m.cover;save();if(!location.hash||location.hash==="#/"||location.hash.startsWith("#/album/"+a.id))render()}
+      else{a.noAuto=true;save()}
+    }catch(e){return}
+  }
+}
+
+// ---------- Vues ----------
+let filt={q:"",f:"tous",sort:"recent"};
+function sorted(list){const l=[...list];
+  if(filt.sort==="artiste")l.sort((a,b)=>a.artist.localeCompare(b.artist)||a.title.localeCompare(b.title));
+  else if(filt.sort==="annee")l.sort((a,b)=>(b.year||0)-(a.year||0));
+  else if(filt.sort==="note")l.sort((a,b)=>(b.rating||0)-(a.rating||0));
+  else l.sort((a,b)=>b.added-a.added);return l}
+function albumRow(a){return `<a class="row" href="#/album/${a.id}"><div class="thumb" style="${coverStyle(a)}"></div><div class="t"><b>${esc(a.title)}</b><span>${esc(a.artist)}${a.year?" · "+a.year:""}</span></div>${a.fav?'<span class="heart" aria-label="Favori">♥</span>':""}<span class="tag">${esc(a.format||"CD")}</span></a>`}
+
+function viewHome(favOnly){
+  const all=sorted(DB.albums);
+  let list=all.filter(a=>{
+    if(favOnly&&!a.fav)return false;
+    if(filt.f==="cd"&&a.format!=="CD")return false;
+    if(filt.f==="vinyle"&&a.format!=="Vinyle")return false;
+    if(filt.f==="fav"&&!a.fav)return false;
+    if(filt.q){const q=filt.q.toLowerCase();return (a.title+" "+a.artist+" "+a.tracks.join(" ")).toLowerCase().includes(q)}
+    return true});
+  const feat=favOnly?list[0]:all[0], prev=all[1], next=all[2];
+  let h=`<header class="top"><h1>${favOnly?"Nos favoris":"Notre Discothèque"}</h1><span class="tag">${DB.albums.length} album${DB.albums.length>1?"s":""}</span></header>`;
+  if(feat&&!filt.q){h+=`<div class="hero">${!favOnly&&prev?`<a class="side l" href="#/album/${prev.id}" aria-label="${esc(prev.title)}" style="${coverStyle(prev)}"></a>`:""}${!favOnly&&next?`<a class="side r" href="#/album/${next.id}" aria-label="${esc(next.title)}" style="${coverStyle(next)}"></a>`:""}
+   <a class="sleeve" href="#/album/${feat.id}" aria-label="Ouvrir ${esc(feat.title)}"><div class="disc"><i style="${coverStyle(feat)}"></i></div><div class="cover" style="${coverStyle(feat)}">${coverInner(feat)}</div></a></div>
+   <div class="herot"><b>${esc(feat.title)}</b><span>${esc(feat.artist)} · ${favOnly?"favori":"dernier ajouté"}</span></div>`}
+  h+=`<div class="sec"><label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="q" type="search" placeholder="Album, artiste, titre…" aria-label="Rechercher" value="${esc(filt.q)}"></label>`;
+  if(!favOnly)h+=`<div class="chips">${[["tous","Tous"],["cd","CD"],["vinyle","Vinyles"],["fav","Favoris"]].map(([k,l])=>`<button class="chip ${filt.f===k?"on":""}" onclick="filt.f='${k}';render()">${l}</button>`).join("")}
+    <select class="chip" aria-label="Trier" onchange="filt.sort=this.value;render()">${[["recent","Récents"],["artiste","Artiste A–Z"],["annee","Année"],["note","Note"]].map(([k,l])=>`<option value="${k}" ${filt.sort===k?"selected":""}>${l}</option>`).join("")}</select></div>`;
+  h+=`</div><div class="sec"><div class="lbl">${filt.q?"Résultats":favOnly?"Favoris":"Tous nos albums"}</div><div id="list">${list.map(albumRow).join("")||`<div class="empty">${favOnly?"Aucun favori pour l’instant. Touche le ♥ sur la fiche d’un album.":"Aucun album trouvé."}</div>`}</div></div>`;
+  return h}
+
+function viewTitres(){
+  const rows=[];DB.albums.forEach(a=>a.tracks.forEach((t,i)=>rows.push({a,t,i})));
+  const q=filt.q.toLowerCase();
+  const list=rows.filter(r=>!q||(r.t+" "+r.a.artist+" "+r.a.title).toLowerCase().includes(q)).sort((x,y)=>x.t.localeCompare(y.t));
+  return `<header class="top"><h1>Tous les titres</h1><span class="tag">${rows.length}</span></header>
+  <div class="sec"><label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="q" type="search" placeholder="Chercher un titre…" aria-label="Chercher un titre" value="${esc(filt.q)}"></label></div>
+  <div class="sec">${list.map(r=>`<a class="row" href="${esc(trackLink(r.a,r.i))}" target="_blank" rel="noopener"><div class="thumb" style="${coverStyle(r.a)}"></div><div class="t"><b>${esc(r.t)}</b><span>${esc(r.a.artist)} · ${esc(r.a.title)}</span></div>${playIcon("Écouter sur Amazon Music")}</a>`).join("")||'<div class="empty">Aucun titre trouvé.</div>'}</div>`}
+
+function playIcon(l){return `<svg width="26" height="26" viewBox="0 0 24 24" role="img" aria-label="${l}"><circle cx="12" cy="12" r="10" fill="#1A1E28"/><path d="M10 8v8l6-4z" fill="#E46A8C"/></svg>`}
+
+function viewAlbum(id){
+  const a=byId(id);if(!a)return `<div class="empty">Album introuvable. <a href="#/">Retour</a></div>`;
+  const today=new Date().toISOString().slice(0,10);
+  return `<div class="dtop"><div class="bigdisc" id="disc" onclick="this.classList.toggle('paused')"><div class="lab" style="${coverStyle(a)}"></div></div>
+  <button class="ibtn back" aria-label="Retour" onclick="history.length>1?history.back():go('#/')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <a class="ibtn edit" aria-label="Modifier l'album" href="#/modifier/${a.id}" style="color:var(--txt)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></a></div>
+  <div class="dinfo">
+   <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px"><div><h2>${esc(a.title)}</h2><p class="sub">${esc(a.artist)}${a.year?" · "+a.year:""}</p></div>
+   <button class="ibtn" aria-label="${a.fav?"Retirer des favoris":"Ajouter aux favoris"}" aria-pressed="${a.fav}" onclick="toggleFav('${a.id}')" style="color:${a.fav?"var(--acc)":"var(--mut)"}"><svg viewBox="0 0 24 24" fill="${a.fav?"currentColor":"none"}" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></button></div>
+   <div class="pills"><span class="pill">${esc(a.format||"CD")}</span>${a.type?`<span class="pill">${esc(a.type)}</span>`:""}${a.version?`<span class="pill">${esc(a.version)}</span>`:""}<span class="pill">${a.tracks.length} titres</span></div>
+   <div class="stars" role="group" aria-label="Note">${[1,2,3,4,5].map(n=>`<button class="${n<=a.rating?"on":""}" aria-label="${n} sur 5" onclick="rate('${a.id}',${n})">●</button>`).join("")}</div>
+   <a class="big" href="${esc(albumLink(a))}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>Écouter l’album sur Amazon Music</a>
+   <div>${a.tracks.map((t,i)=>`<a class="trk" href="${esc(trackLink(a,i))}" target="_blank" rel="noopener"><span class="n">${i+1}</span><span class="nm">${esc(t)}</span>${playIcon("Écouter "+esc(t)+" sur Amazon Music")}</a>`).join("")||'<p class="muted">Pas encore de titres. Touche le crayon pour les ajouter.</p>'}</div>
+   <div class="grid2"><label class="field">Écouté le<input type="date" value="${esc(a.listened)}" max="${today}" onchange="setField('${a.id}','listened',this.value)"></label>
+   <div class="field">&nbsp;<button class="ghost" onclick="setField('${a.id}','listened','${today}');render()">Écouté aujourd’hui</button></div></div>
+   <label class="field">Nos notes<textarea placeholder="Vos impressions, le titre préféré de chacun…" onchange="setField('${a.id}','notes',this.value)">${esc(a.notes)}</textarea></label>
+   <p class="muted">Les liens ouvrent une recherche dans Amazon Music. Si elle tombe sur la mauvaise version, colle le lien « Partager » exact via le crayon.</p>
+  </div>`}
+
+// ---------- Formulaire ajout / modification ----------
+let draft=null, results=[];
+function newDraft(a){return a?JSON.parse(JSON.stringify(a)):{id:null,artist:"",title:"",year:"",type:"",format:"CD",version:"",tracks:[],cover:"",color:COLORS[Math.floor(Math.random()*COLORS.length)],fav:false,rating:0,listened:"",notes:"",amazon:"",trackLinks:{}}}
+function viewForm(id){
+  if(!draft||draft._for!==(id||"new")){draft=newDraft(id?byId(id):null);draft._for=id||"new";results=[]}
+  const d=draft;
+  return `<header class="top"><button class="ibtn" aria-label="Retour" onclick="draft=null;history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><h1 style="flex:1;font-size:22px">${id?"Modifier l’album":"Ajouter un album"}</h1></header>
+  <div class="form">
+   <div style="display:flex;gap:14px;align-items:center"><div class="thumb" style="width:96px;height:96px;position:relative;${coverStyle(d)}">${coverInner(d)}</div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:8px"><label class="ghost" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Photo de la pochette<input type="file" accept="image/*" capture="environment" style="display:none" onchange="photo(this)"></label>
+    ${d.cover?`<button class="ghost" onclick="draft.cover='';render()">Retirer l’image</button>`:""}</div></div>
+   <label class="field">Artiste<input id="f-artist" value="${esc(d.artist)}" placeholder="ex. TWICE" oninput="draft.artist=this.value"></label>
+   <label class="field">Titre de l’album<input id="f-title" value="${esc(d.title)}" placeholder="ex. STRATEGY" oninput="draft.title=this.value"></label>
+   <button class="big" onclick="doSearch()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Remplir automatiquement</button>
+   <div id="results">${resultsHtml()}</div>
+   <div class="grid2"><label class="field">Année<input inputmode="numeric" value="${esc(d.year)}" oninput="draft.year=this.value"></label>
+   <label class="field">Format<select onchange="draft.format=this.value">${["CD","Vinyle","Cassette","Numérique"].map(f=>`<option ${d.format===f?"selected":""}>${f}</option>`).join("")}</select></label></div>
+   <div class="grid2"><label class="field">Type<input value="${esc(d.type)}" placeholder="Album, Mini-album, EP…" oninput="draft.type=this.value"></label>
+   <label class="field">Version<input value="${esc(d.version)}" placeholder="ex. Accordion ver." oninput="draft.version=this.value"></label></div>
+   <label class="field">Titres (un par ligne)<textarea id="f-tracks" style="min-height:160px" oninput="draft.tracks=this.value.split('\\n').map(s=>s.trim()).filter(Boolean)">${esc(d.tracks.join("\n"))}</textarea></label>
+   <label class="field">Lien exact de l’album sur Amazon Music (facultatif)<input type="url" value="${esc(d.amazon)}" placeholder="https://music.amazon.fr/albums/…" oninput="draft.amazon=this.value.trim()"></label>
+   <button class="big" onclick="saveDraft()">Enregistrer</button>
+   ${id?`<button class="ghost danger" onclick="delAlbum('${id}')">Supprimer cet album</button>`:""}
+  </div>`}
+function resultsHtml(){if(!results.length)return"";return `<div class="lbl" style="margin-bottom:8px">Choisis le bon album</div><div style="display:flex;flex-direction:column;gap:8px">${results.map((r,i)=>`<button class="res" onclick="pick(${i})"><img src="${esc(r.cover)}" alt=""><div style="flex:1;min-width:0"><b style="display:block;font-size:14px">${esc(r.title)}</b><span class="muted">${esc(r.artist)} · ${esc(r.year)} · ${r.count||"?"} titres</span></div></button>`).join("")}</div>`}
+async function doSearch(){
+  const q=(draft.artist+" "+draft.title).trim();if(!q){toast("Écris l’artiste et/ou le titre");return}
+  $("#results").innerHTML='<p class="muted">Recherche…</p>';
+  try{results=await itunesSearch(q);$("#results").innerHTML=resultsHtml()||'<p class="muted">Rien trouvé. Remplis les infos à la main.</p>'}
+  catch(e){$("#results").innerHTML='<p class="muted">Recherche impossible (pas de connexion ?). Remplis à la main.</p>'}
+}
+async function pick(i){const r=results[i];Object.assign(draft,{artist:draft.artist||r.artist,title:r.title,year:r.year,cover:draft.cover&&draft.cover.startsWith("data:")?draft.cover:r.cover});
+  try{const t=await itunesTracks(r.id);if(t.length)draft.tracks=t}catch(e){}
+  results=[];render();toast("Infos remplies ✓")}
+function photo(inp){const f=inp.files[0];if(!f)return;const img=new Image();const rd=new FileReader();
+  rd.onload=()=>{img.onload=()=>{const s=Math.min(1,500/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=img.width*s;c.height=img.height*s;c.getContext("2d").drawImage(img,0,0,c.width,c.height);draft.cover=c.toDataURL("image/jpeg",.8);render()};img.src=rd.result};rd.readAsDataURL(f)}
+function saveDraft(){const d=draft;if(!d.title.trim()||!d.artist.trim()){toast("Il faut au moins l’artiste et le titre");return}
+  d.year=parseInt(d.year)||"";delete d._for;
+  if(d.id){const i=DB.albums.findIndex(a=>a.id===d.id);DB.albums[i]=d}else{d.id=uid();d.added=Date.now();DB.albums.push(d)}
+  save();const id=d.id;draft=null;toast("Enregistré ✓");location.replace("#/album/"+id)}
+function delAlbum(id){if(!confirm("Supprimer cet album de la discothèque ?"))return;DB.albums=DB.albums.filter(a=>a.id!==id);save();draft=null;toast("Album supprimé");location.replace("#/")}
+
+// ---------- Réglages : partage famille ----------
+function viewReglages(){return `<header class="top"><h1>Réglages</h1></header><div class="form">
+  <p class="muted">La discothèque est enregistrée sur ce téléphone. Pour la mettre sur le téléphone d’un autre membre de la famille, exporte le fichier ici, envoie-le-lui, puis il l’importe dans son appli.</p>
+  <button class="big" onclick="exportData()">Exporter la discothèque</button>
+  <label class="ghost" style="cursor:pointer">Importer un fichier<input type="file" accept="application/json,.json" style="display:none" onchange="importData(this)"></label>
+  <button class="ghost" onclick="DB.albums.forEach(a=>{if(!a.cover.startsWith('data:')){a.cover='';a.noAuto=false}});save();fillMissingCovers();toast('Recherche des pochettes…')">Rechercher à nouveau les pochettes</button>
+  <p class="muted">Notre Discothèque · ${DB.albums.length} albums · ${DB.albums.reduce((n,a)=>n+a.tracks.length,0)} titres</p></div>`}
+function exportData(){const b=new Blob([JSON.stringify(DB)],{type:"application/json"});const u=URL.createObjectURL(b);const l=document.createElement("a");l.href=u;l.download="notre-discotheque.json";l.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.albums))throw 0;
+  const have=new Set(DB.albums.map(a=>norm(a.artist+a.title)));let n=0;d.albums.forEach(a=>{const k=norm(a.artist+a.title);if(have.has(k)){const i=DB.albums.findIndex(x=>norm(x.artist+x.title)===k);DB.albums[i]=a}else{DB.albums.push(a);n++}});
+  save();toast(n+" album(s) ajouté(s), les autres mis à jour");render()}catch(e){toast("Fichier non reconnu")}};r.readAsText(f)}
+
+// ---------- Actions ----------
+function toggleFav(id){const a=byId(id);a.fav=!a.fav;save();render();toast(a.fav?"Ajouté aux favoris ♥":"Retiré des favoris")}
+function rate(id,n){const a=byId(id);a.rating=a.rating===n?0:n;save();render()}
+function setField(id,k,v){const a=byId(id);a[k]=v;save();if(k==="listened")toast("Date enregistrée")}
+
+// ---------- Routeur ----------
+function render(){
+  const h=location.hash||"#/";let html;
+  ["albums","titres","ajout","favoris","reglages"].forEach(k=>$("#nav-"+k).classList.remove("on"));
+  if(h.startsWith("#/album/"))html=viewAlbum(h.slice(8));
+  else if(h.startsWith("#/modifier/"))html=viewForm(h.slice(11));
+  else if(h==="#/ajout"){html=viewForm(null);$("#nav-ajout").classList.add("on")}
+  else if(h==="#/titres"){html=viewTitres();$("#nav-titres").classList.add("on")}
+  else if(h==="#/favoris"){html=viewHome(true);$("#nav-favoris").classList.add("on")}
+  else if(h==="#/reglages"){html=viewReglages();$("#nav-reglages").classList.add("on")}
+  else{html=viewHome(false);$("#nav-albums").classList.add("on")}
+  const app=$("#app");app.innerHTML=html;
+  const q=$("#q");if(q){q.oninput=()=>{filt.q=q.value;const pos=q.selectionStart;render();const n=$("#q");n.focus();n.setSelectionRange(pos,pos)}}
+}
+let lastRoute="";
+window.addEventListener("hashchange",()=>{const r=(location.hash||"#/").split("/")[1]||"";if(r!==lastRoute&&!["album","modifier"].includes(r))filt.q="";lastRoute=r;render();window.scrollTo(0,0)});
+render();fillMissingCovers();
+if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
